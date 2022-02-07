@@ -17,5 +17,6 @@ export class TodoController {
         todo={...todo,...newTodo};
         this.todos.push(todo);
         return this.todos;
+        //
     }
 }
