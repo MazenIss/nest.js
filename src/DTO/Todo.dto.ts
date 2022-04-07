@@ -11,13 +11,13 @@ export class TodoDto{
      @MaxLength(10,{
           message:ErrorMessages.maxLength10
      })
-     name: string;
+     Name: string;
      @IsNotEmpty({
           message:ErrorMessages.DisEmpty
      }) 
      @MinLength(10,{
           message:ErrorMessages.minLength10
      })
-     description: string;
+     Description: string;
      
 }

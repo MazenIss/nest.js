@@ -4,8 +4,8 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('todo')
 export class TodoEntity extends TimeStampEntities {
-    @PrimaryGeneratedColumn()
-    Id:number;
+    @PrimaryGeneratedColumn('uuid')
+    Id:string;
     @Column()
     Name:string;
     @Column()
