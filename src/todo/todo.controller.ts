@@ -15,6 +15,23 @@ export class TodoController {
     getTodo(@Param('id') id:string): Todo {
         return this.todo.getTodo(id);
     }
+    @Get(':status')
+    @Version('3')
+    async  countRowsByStatus(@Param('status') s:string): Promise<number> {
+        if(s==="actif"){
+          const e=await this.todo.countStatusActif();
+         // console.log(e);
+          return e;}
+       if(s==="waiting"){
+            const e=await this.todo.countStatusWaiting();
+            //console.log(e);
+            return e;}
+     if(s==="done"){
+        const e=await this.todo.countStatusDone();
+        //console.log(e);
+         return e;}
+
+    }
     @Get()
     @Version('1')
     getAll(): Todo[] {
@@ -42,8 +59,24 @@ export class TodoController {
         //
     }
     @Delete(':id')
+    @Version('1')
     deleteTodo(@Param('id') id:string): any {
         return this.todo.deleteTodo(id);
+    }
+    @Delete(':id')
+    @Version('2')
+    deleteTodoV2(@Param('id') id:string): any {
+        return this.todo.deleteTodoV2(id);
+    }
+    @Delete(':id')
+    @Version('3')
+    deleteTodoV3(@Param('id') id:string): any {
+        return this.todo.softDeleteTodo(id);
+    }
+    @Patch('/restore/:id')
+    @Version('3')
+    restoreTodo(@Param('id') id:string): any{
+        return this.todo.restoreTodo(id);
     }
     @Patch(':id')
     @Version('1')
@@ -55,5 +88,6 @@ export class TodoController {
     async updateTodov2(@Param('id') id:string,@Body() updatedTodo:UpdateTodo): Promise<TodoEntity>{
         return await this.todo.updateTodoV2(id,updatedTodo);
     }
+    
    
 }

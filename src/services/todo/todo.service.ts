@@ -6,9 +6,11 @@ import { UpdateTodo } from 'src/DTO/updateTodo.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TodoEntity } from 'src/entities/todo.entity';
 import { Repository } from 'typeorm';
+import { TodoStatusEnum } from 'src/todo/todo-status.enum';
 
 @Injectable()
 export class TodoService {
+    
     todos:Todo[]=[];
     constructor(@InjectRepository(TodoEntity) private  todoRepository : Repository<TodoEntity>){}
 
@@ -23,6 +25,16 @@ getTodo(id:string):Todo{
     let todoIdx = this.todos.findIndex((todo) => todo.id == id);
     if(todoIdx === -1) throw new NotFoundException();
     return this.todos[todoIdx];
+}
+async countStatusActif(): Promise<number> {
+     const e= await this.todoRepository.count({where:{Status:TodoStatusEnum.actif}})
+     return e;
+}
+async countStatusDone(): Promise<number> {
+    return await this.todoRepository.count({where:{Status:TodoStatusEnum.done}});
+}
+async countStatusWaiting(): Promise<number> {
+    return await this.todoRepository.count({where:{Status:TodoStatusEnum.waiting}});
 }
 addTodo(newtodo:TodoDto):Todo[]{
     let todo=new Todo();
@@ -48,6 +60,19 @@ deleteTodo(id:string) :any{
    return {"deleted items" : r};
 
 }
+async deleteTodoV2(id:string) {
+    return await this.todoRepository.delete(id);
+ }
+ async softDeleteTodo(id:string) {
+    const elementToDelete=this.todoRepository.findOneBy({Id:id});
+    if(!elementToDelete)
+       throw new NotFoundException('l element d id ${id} n existe pas' );
+    return await this.todoRepository.softDelete(id);
+ }
+ async restoreTodo(id:string){
+     const elementToRestore=this.todoRepository.findOneBy({Id:id});
+     return await this.todoRepository.restore(id);
+ }
 updateTodo(id:string,updatedTodo:UpdateTodo):Todo[]{
     let todoIdx = this.todos.findIndex((todo) => todo.id == id);    
     if(todoIdx === -1) throw new NotFoundException();

@@ -1,8 +1,6 @@
-import { PartialType } from "@nestjs/mapped-types";
 import { IsEnum, IsOptional, MaxLength, MinLength } from "class-validator";
 import { ErrorMessages } from "src/ErrorMessages/error-messages.enum";
 import { TodoStatusEnum } from "src/todo/todo-status.enum";
-import { TodoDto } from "./Todo.dto";
 
 export class UpdateTodo{
    @MinLength(3,{
