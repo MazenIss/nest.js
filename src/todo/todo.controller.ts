@@ -1,10 +1,12 @@
-import { Body, Controller ,Delete,Get, Param, Patch, Post, Put, Version} from '@nestjs/common';
+import { Body, Controller ,Delete,Get, Param, Patch, Post, Put, Query, Version} from '@nestjs/common';
 import { Todo } from './todo.model';
 import { TodoService } from 'src/services/todo/todo.service';
 import { TodoDto } from 'src/DTO/Todo.dto';
 import { UpdateTodo } from 'src/DTO/updateTodo.dto';
 import { FusionnePipe } from 'src/pipes/fusionne.pipe';
 import { TodoEntity } from 'src/entities/todo.entity';
+import { rechercheDTO } from 'src/DTO/recherche.dto';
+import { SelectQueryBuilder } from 'typeorm';
 
 
 @Controller('todo')
@@ -31,6 +33,11 @@ export class TodoController {
         //console.log(e);
          return e;}
 
+    }
+    @Get()
+    @Version('4')
+    getByCriteres(@Body() rech:rechercheDTO): Promise<any[]> {
+        return this.todo.getTodoByCritere(rech);
     }
     @Get()
     @Version('1')

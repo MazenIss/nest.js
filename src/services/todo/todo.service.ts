@@ -5,8 +5,9 @@ import { Todo } from 'src/todo/todo.model';
 import { UpdateTodo } from 'src/DTO/updateTodo.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TodoEntity } from 'src/entities/todo.entity';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { TodoStatusEnum } from 'src/todo/todo-status.enum';
+import { rechercheDTO } from 'src/DTO/recherche.dto';
 
 @Injectable()
 export class TodoService {
@@ -19,6 +20,14 @@ getAllTodo():Todo[]{
 }
 async getAllTodoV2():Promise<TodoEntity[]>{
     return await this.todoRepository.find();
+}
+async getTodoByCritere(criteres:rechercheDTO):Promise<any[]>{
+      const results= await this.todoRepository.createQueryBuilder("todo")
+      .where("todo.Name LIKE :nam",{nam:'%'+criteres.Chaine+'%'}).
+      orWhere("todo.Status =:s",{s:criteres.status}).getRawMany();
+             return results;
+    
+
 }
 
 getTodo(id:string):Todo{
